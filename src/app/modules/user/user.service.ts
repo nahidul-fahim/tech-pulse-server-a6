@@ -3,6 +3,8 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
+import { generateToken } from "../auth/auth.utils";
+import config from "../../config";
 
 // create new user into db
 const createUserIntoDb = async (cloudinaryResult: any, payload: TUser) => {
@@ -16,9 +18,21 @@ const createUserIntoDb = async (cloudinaryResult: any, payload: TUser) => {
     }
     payload.profileImg = cloudinaryResult.secure_url;
     const newUser = await User.create(payload);
+    const jwtPayload = {
+        userId: newUser?._id,
+        userEmail: newUser?.email,
+        userRole: newUser?.role,
+    }
+
+    // generate access token
+    const accessToken = generateToken(
+        jwtPayload,
+        config.jwt_access_secret as string,
+        config.jwt_access_expires_in as string
+    )
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...others } = newUser.toObject();
-    return others;
+    return { accessToken, others };
 }
 
 // get single user by id from db
