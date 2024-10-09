@@ -1,15 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
 // create new user into db
-const createUserIntoDb = async (payload: TUser) => {
+const createUserIntoDb = async (cloudinaryResult: any, payload: TUser) => {
     // checking if the user exists
     const isExistingUser = await User.isUserExistsByEmail(payload.email)
     if (isExistingUser) {
         throw new AppError(httpStatus.CONFLICT, "The user already exists!")
     }
+    if (!cloudinaryResult || !cloudinaryResult.secure_url) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Profile image upload failed");
+    }
+    payload.profileImg = cloudinaryResult.secure_url;
     const newUser = await User.create(payload);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...others } = newUser.toObject();

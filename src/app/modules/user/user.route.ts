@@ -1,15 +1,22 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import validateRequest from "../../middlewares/validateRequest";
 import { UserValidation } from "./user.validation";
 import { UserController } from "./user.controller";
 import auth from "../../middlewares/auth";
 import { USER_ROLE } from "./user.constant";
+import { sendImageToCloudinary, upload } from "../../utils/sendImageToCloudinary";
 
 const router = express.Router();
 
 // create new user
 router.post(
     "/auth/signup",
+    upload.single('file'),
+    sendImageToCloudinary,
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data);
+        next();
+    },
     validateRequest(UserValidation.createUserValidationSchema),
     UserController.createNewUser
 );

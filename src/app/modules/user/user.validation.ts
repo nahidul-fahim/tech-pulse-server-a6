@@ -11,22 +11,10 @@ const createUserValidationSchema = z.object({
             invalid_type_error: "Email must be a string",
             required_error: "Email is required"
         }).email(),
-        role: z.enum(["user", "admin"]),
         password: z.string({
             invalid_type_error: "Password must be a string",
             required_error: "Password is required"
         }).min(6, { message: "Must be 6 or more characters long" }),
-        phone: z.string({
-            invalid_type_error: "Phone must be a string",
-            required_error: "Phone is required"
-        }),
-        address: z.string({
-            invalid_type_error: "Address must be a string",
-            required_error: "Address is required"
-        }),
-        preferences: z.string({
-            invalid_type_error: "Preferences must be a string",
-        }).optional()
     })
 });
 

@@ -7,7 +7,8 @@ import sendResponse from "../../utils/sendResponse";
 // create new user
 const createNewUser = catchAsync(async (req: Request, res: Response) => {
     const studentData = req.body;
-    const result = await UserServices.createUserIntoDb(studentData);
+    const cloudinaryResult = req.cloudinaryResult;
+    const result = await UserServices.createUserIntoDb(cloudinaryResult, studentData);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

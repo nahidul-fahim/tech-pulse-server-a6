@@ -19,6 +19,7 @@ const userSchema = new Schema<TUser, UserModel>({
     role: {
         type: String,
         enum: ['user', 'admin'],
+        default: 'user'
     },
     password: {
         type: String,
@@ -26,23 +27,13 @@ const userSchema = new Schema<TUser, UserModel>({
         required: [true, 'Password is required'],
         minlength: [6, "Password must be at least 6 characters long"],
     },
-    phone: {
+    profileImg: {
         type: String,
-        required: [true, 'Phone is required'],
-        trim: true,
+        required: true
     },
-    address: {
-        type: String,
-        required: [true, 'Address is required'],
-        trim: true,
-    },
-    preferences: {
-        type: String,
-        required: false
-    },
-    isActive: {
+    isDeleted: {
         type: Boolean,
-        default: true
+        default: false
     },
     resetPasswordToken: {
         type: String,
