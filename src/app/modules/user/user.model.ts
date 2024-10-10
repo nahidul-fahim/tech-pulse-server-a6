@@ -31,9 +31,29 @@ const userSchema = new Schema<TUser, UserModel>({
         type: String,
         required: true
     },
+    bio : {
+        type: String,
+        default: ""
+    },
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    isSubscribed: {
+        type: Boolean,
+        default: false
+    },
+    posts: {
+        type: Number,
+        default: 0
+    },
+    followers: {
+        type: Number,
+        default: 0
+    },
+    following: {
+        type: Number,
+        default: 0
     },
     resetPasswordToken: {
         type: String,

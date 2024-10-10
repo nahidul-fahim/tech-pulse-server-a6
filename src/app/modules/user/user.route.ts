@@ -31,17 +31,15 @@ router.get(
 // update user
 router.put(
     "/user/:id",
-    auth(USER_ROLE.admin, USER_ROLE.user),
+    auth(USER_ROLE.user),
+    upload.single('file'),
+    sendImageToCloudinary,
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data);
+        next();
+    },
     validateRequest(UserValidation.updateUserValidationSchema),
     UserController.updateUser
-);
-
-// update user status
-router.put(
-    "/user/status/:id",
-    auth(USER_ROLE.admin),
-    validateRequest(UserValidation.updateUserStatusValidationSchema),
-    UserController.updateUserStatus
 );
 
 // get all users

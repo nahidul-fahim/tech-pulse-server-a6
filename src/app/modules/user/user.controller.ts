@@ -35,24 +35,12 @@ const getUserById = catchAsync(async (req: Request, res: Response) => {
 const updateUser = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const userData = req.body;
-    const result = await UserServices.updateUserInDb(id, userData);
+    const cloudinaryResult = req.cloudinaryResult;
+    const result = await UserServices.updateUserInDb(cloudinaryResult, id, userData);
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "User updated successfully",
-        data: result
-    })
-});
-
-// update user status
-const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const userData = req.body;
-    const result = await UserServices.updateUserStatusInDb(id, userData);
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "User status updated successfully",
         data: result
     })
 });
@@ -69,4 +57,4 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-export const UserController = { createNewUser, getUserById, updateUser, updateUserStatus, getAllUsers };
+export const UserController = { createNewUser, getUserById, updateUser, getAllUsers };

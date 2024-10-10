@@ -8,7 +8,12 @@ export interface TUser {
     role: "user" | "admin";
     password: string;
     profileImg: string;
+    bio?: string;
     isDeleted?: boolean;
+    isSubscribed?: boolean;
+    posts?: number;
+    followers?: number;
+    following?: number;
     resetPasswordToken?: string;
     resetPasswordTokenExpired?: Date;
 }

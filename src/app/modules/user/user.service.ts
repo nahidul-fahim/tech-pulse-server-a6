@@ -42,20 +42,13 @@ const getUserByIdFromDb = async (id: string) => {
 }
 
 // update user into db
-const updateUserInDb = async (id: string, payload: Partial<TUser>) => {
+const updateUserInDb = async (cloudinaryResult: any, id: string, payload: Partial<TUser>) => {
     const user = await User.findById(id);
     if (!user) {
         throw new AppError(httpStatus.NOT_FOUND, "User not found");
     }
-    const result = await User.findByIdAndUpdate(id, payload, { new: true });
-    return result;
-};
-
-// update user status into db
-const updateUserStatusInDb = async (id: string, payload: Partial<TUser>) => {
-    const user = await User.findById(id);
-    if (!user) {
-        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    if (cloudinaryResult && cloudinaryResult.secure_url) {
+        payload.profileImg = cloudinaryResult.secure_url;
     }
     const result = await User.findByIdAndUpdate(id, payload, { new: true });
     return result;
@@ -68,4 +61,4 @@ const getAllUsersFromDb = async () => {
 };
 
 
-export const UserServices = { createUserIntoDb, getUserByIdFromDb, updateUserInDb, updateUserStatusInDb, getAllUsersFromDb };
+export const UserServices = { createUserIntoDb, getUserByIdFromDb, updateUserInDb, getAllUsersFromDb };
