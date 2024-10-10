@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-
+// sign in validation schema
 const signInValidationSchema = z.object({
     body: z.object({
         email: z.string({
@@ -15,6 +15,7 @@ const signInValidationSchema = z.object({
     })
 })
 
+// forgot password validation schema
 const forgotPasswordValidationSchema = z.object({
     body: z.object({
         email: z.string({
@@ -25,6 +26,7 @@ const forgotPasswordValidationSchema = z.object({
     })
 })
 
+// reset password validation schema
 const resetPasswordValidationSchema = z.object({
     body: z.object({
         token: z.string({

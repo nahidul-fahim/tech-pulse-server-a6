@@ -23,7 +23,6 @@ const signInUser = async (payload: TSignInUser) => {
         throw new AppError(httpStatus.FORBIDDEN, "Password is incorrect!")
     }
 
-
     const jwtPayload = {
         userId: user?._id,
         userEmail: user?.email,
