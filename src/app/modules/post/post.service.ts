@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { User } from "../user/user.model";
 import { TPost } from "./post.interface";
 import { Post } from "./post.model";
 
+// create new post into db
 const createNewPostIntoDb = async (payload: TPost) => {
   const isUserExist = await User.findById(payload.user);
   if (!payload.featuredImg) {
@@ -16,17 +18,20 @@ const createNewPostIntoDb = async (payload: TPost) => {
   return post;
 };
 
+// get all posts from db
 const getAllPostsFromDb = async () => {
   const posts = await Post.find();
   return posts || [];
 };
 
+// get single post from db
 const getSinglePostFromDb = async (id: string) => {
   const post = await Post.findById(id);
   return post || {};
 };
 
-const updatePostFromDb = async (id: string, payload: Partial<TPost>) => {
+// update post from db
+const updatePostFromDb = async (cloudinaryResult: any, id: string, payload: Partial<TPost>) => {
   const postExist = await Post.findById(id);
   if (!postExist) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found");
@@ -40,11 +45,16 @@ const updatePostFromDb = async (id: string, payload: Partial<TPost>) => {
     }
   });
 
+  if (cloudinaryResult && cloudinaryResult.secure_url) {
+    updateData.featuredImg = cloudinaryResult.secure_url;
+  }
+
   // Update the post in the database
   const post = await Post.findByIdAndUpdate(id, updateData, { new: true });
   return post;
 };
 
+// delete post from db
 const deletePostFromDb = async (
   id: string,
   user: { userRole: string; userId: string }
@@ -66,6 +76,7 @@ const deletePostFromDb = async (
   return post;
 };
 
+// vote post
 const votePost = async (id: string, voteStatus: boolean) => {
   const postExist = await Post.findById(id);
   if (!postExist) {

@@ -14,22 +14,53 @@ router.post(
   upload.single('file'),
   sendImageToCloudinary,
   (req: Request, res: Response, next: NextFunction) => {
-      req.body = JSON.parse(req.body.data);
-      next();
+    req.body = JSON.parse(req.body.data);
+    next();
   },
   validateRequest(PostValidations.createNewPostValidationSchema),
   PostControllers.createNewPost
 );
 
-router.get("/get-posts", PostControllers.getAllPosts);
+// get all the posts
+router.get(
+  "/get-posts",
+  PostControllers.getAllPosts
+);
 
-router.get("/get-post/:id", PostControllers.getSinglePost);
+// get single post by id
+router.get(
+  "/get-post/:id",
+  PostControllers.getSinglePost
+);
 
-router.put("/update-post/:id", auth("user"), PostControllers.updateSinglePost);
+// update a post
+router.put(
+  "/update-post/:id",
+  auth(USER_ROLE.user),
+  upload.single('file'),
+  sendImageToCloudinary,
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
+  validateRequest(PostValidations.updatePostValidationSchema),
+  PostControllers.updateSinglePost
+);
 
-router.delete("/delete-post/:id", auth("user","admin"), PostControllers.deleteSinglePost);
+// delete a post
+router.delete(
+  "/delete-post/:id",
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  PostControllers.deleteSinglePost
+);
 
-router.patch("/vote-post/:id", auth("user"),validateRequest(PostValidations.votePostValidationSchema), PostControllers.votePost);
+// vote a post
+router.patch(
+  "/vote-post/:id",
+  auth(USER_ROLE.user),
+  validateRequest(PostValidations.votePostValidationSchema),
+  PostControllers.votePost
+);
 
 const PostRoutes = router;
 export default PostRoutes;

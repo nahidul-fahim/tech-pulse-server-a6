@@ -41,7 +41,8 @@ const getSinglePost = catchAsync(async (req, res) => {
 
 const updateSinglePost = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await PostServices.updatePostFromDb(id, req.body);
+  const cloudinaryResult = req.cloudinaryResult;
+  const result = await PostServices.updatePostFromDb(cloudinaryResult, id, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

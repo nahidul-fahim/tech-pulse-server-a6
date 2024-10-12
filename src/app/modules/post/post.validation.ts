@@ -20,6 +20,26 @@ const createNewPostValidationSchema = z.object({
     }),
 });
 
+// update post validation schema
+const updatePostValidationSchema = z.object({
+    body: z.object({
+        title: z.string({
+            invalid_type_error: "title must be a string",
+            required_error: "Please provide a title for your post",
+        }).optional(),
+        description: z.string({
+            invalid_type_error: "description must be a string",
+            required_error: "Please provide a description for your post",
+        }).optional(),
+        isPremium: z.boolean().optional(),
+        category: z.string({
+            invalid_type_error: "category must be a string",
+            required_error: "Please provide a category for your post",
+        }).optional(),
+    }),
+});
+
+
 const votePostValidationSchema = z.object({
     body: z.object({
         voteStatus: z.boolean({
@@ -32,5 +52,6 @@ const votePostValidationSchema = z.object({
 
 export const PostValidations = {
     createNewPostValidationSchema,
+    updatePostValidationSchema,
     votePostValidationSchema
 }
