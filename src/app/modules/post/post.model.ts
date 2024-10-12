@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { TPost } from "./post.interface";
 
-// Booking Schema Definition
+// Post Schema Definition
 const postSchema = new Schema<TPost>(
   {
     title: {
@@ -49,5 +49,5 @@ const postSchema = new Schema<TPost>(
 );
 
 
-// Export the Booking model
+// Export the post model
 export const Post = model<TPost>("post", postSchema);

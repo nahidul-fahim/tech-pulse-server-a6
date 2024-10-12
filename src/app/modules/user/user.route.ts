@@ -42,11 +42,27 @@ router.put(
     UserController.updateUser
 );
 
+// block user
+router.put(
+    "/manage-user/:id",
+    auth(USER_ROLE.admin),
+    validateRequest(UserValidation.manageUserValidationSchema),
+    UserController.manageUser
+);
+
 // get all users
 router.get(
     "/users",
     auth(USER_ROLE.admin),
     UserController.getAllUsers
+);
+
+// create admin
+router.post(
+    "/create-admin",
+    auth(USER_ROLE.admin),
+    validateRequest(UserValidation.createAdminValidationSchema),
+    UserController.createNewAdmin
 );
 
 export const UserRoutes = router;

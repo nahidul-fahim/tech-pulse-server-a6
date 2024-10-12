@@ -17,11 +17,23 @@ const createNewPost = catchAsync(async (req, res) => {
 
 
 const getAllPosts = catchAsync(async (req, res) => {
-  const result = await PostServices.getAllPostsFromDb();
+  const result = await PostServices.getAllPostsFromDb(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Posts fetched successfully",
+    data: result,
+  });
+});
+
+
+const getUserAllPosts = catchAsync(async (req, res) => {
+  const { userId } = req.user;
+  const result = await PostServices.getUserPostsFromDb(userId, req.query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User posts fetched successfully",
     data: result,
   });
 });
@@ -78,4 +90,12 @@ const votePost = catchAsync(async (req, res) => {
 });
 
 
-export const PostControllers = { createNewPost, getAllPosts, getSinglePost, updateSinglePost, deleteSinglePost, votePost };
+export const PostControllers = {
+  createNewPost,
+  getAllPosts,
+  getUserAllPosts,
+  getSinglePost,
+  updateSinglePost,
+  deleteSinglePost,
+  votePost
+};

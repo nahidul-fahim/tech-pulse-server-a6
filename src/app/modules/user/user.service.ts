@@ -60,5 +60,34 @@ const getAllUsersFromDb = async () => {
     return users;
 };
 
+// block/unblock user in db
+const manageUserInDb = async (id: string, payload: Record<string, any>) => {
+    const user = await User.findById(id);
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+    const result = await User.findByIdAndUpdate(id, payload, { new: true });
+    return result;
+};
 
-export const UserServices = { createUserIntoDb, getUserByIdFromDb, updateUserInDb, getAllUsersFromDb };
+
+// create admin into admin
+const createAdminIntoDb = async (payload: TUser) => {
+    // checking if the user exists
+    const isExistingUser = await User.isUserExistsByEmail(payload.email)
+    if (isExistingUser) {
+        throw new AppError(httpStatus.CONFLICT, "The user already exists!")
+    }
+    const result = await User.create(payload);
+    return result;
+}
+
+
+export const UserServices = {
+    createUserIntoDb,
+    getUserByIdFromDb,
+    updateUserInDb,
+    getAllUsersFromDb,
+    manageUserInDb,
+    createAdminIntoDb
+};

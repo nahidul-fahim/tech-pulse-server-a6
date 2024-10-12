@@ -27,6 +27,13 @@ router.get(
   PostControllers.getAllPosts
 );
 
+// get user all posts
+router.get(
+  "/get-user-posts",
+  auth(USER_ROLE.user),
+  PostControllers.getUserAllPosts
+)
+
 // get single post by id
 router.get(
   "/get-post/:id",

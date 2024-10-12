@@ -19,6 +19,18 @@ const createNewUser = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+// get all users
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+    const result = await UserServices.getAllUsersFromDb();
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Users fetched successfully",
+        data: result
+    })
+});
+
+
 // get user by id
 const getUserById = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -45,16 +57,36 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
     })
 });
 
-// get all users
-const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-    const result = await UserServices.getAllUsersFromDb();
+// block user
+const manageUser = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await UserServices.manageUserInDb(id, req.body);
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Users fetched successfully",
+        message: "User status updated",
         data: result
     })
 });
 
 
-export const UserController = { createNewUser, getUserById, updateUser, getAllUsers };
+// create new admin
+const createNewAdmin = catchAsync(async (req: Request, res: Response) => {
+    const adminData = req.body;
+    const result = await UserServices.createAdminIntoDb(adminData);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Admin registered successfully",
+        data: result
+    })
+})
+
+export const UserController = {
+    createNewUser,
+    getUserById,
+    updateUser,
+    getAllUsers,
+    manageUser,
+    createNewAdmin
+};

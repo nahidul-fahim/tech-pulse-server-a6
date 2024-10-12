@@ -28,26 +28,34 @@ class QueryBuilder<T> {
     // filter method
     filter() {
         const queryObj = { ...this.query };
-        const excludedFields = ["searchTerm", "minPricePerHour", "maxPricePerHour"];
+        const excludedFields = ["searchTerm", "sort", "limit", "page"];
         excludedFields.forEach((field) => delete queryObj[field]);
-
-        const priceFilter: Record<string, unknown> = {};
-        if (this.query.minPricePerHour) {
-            priceFilter.$gte = Number(this.query.minPricePerHour);
+        // filtering based on isPremium
+        if (this.query.isPremium) {
+            queryObj["isPremium"] = this.query.isPremium === "true";
         }
-        if (this.query.maxPricePerHour) {
-            priceFilter.$lte = Number(this.query.maxPricePerHour);
+        // filtering based on category
+        if (this.query.category) {
+            queryObj["category"] = { $regex: this.query.category as string, $options: 'i' };
         }
-        if (Object.keys(priceFilter).length > 0) {
-            queryObj["pricePerHour"] = priceFilter;
-        }
-        if (this.query.carType) {
-            queryObj["carType"] = { $regex: this.query.carType as string, $options: 'i' };
-        }
-
-        // finding based on the filters
         this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
+        return this;
+    }
 
+    // sort method
+    sort() {
+        const sortField = this.query.sort ? this.query.sort as string : '-createdAt';
+        this.modelQuery = this.modelQuery.sort(sortField);
+        return this;
+    }
+
+
+    // pagination
+    paginate() {
+        const page = Number(this.query.page);
+        const limit = Number(this.query.limit);
+        const skip = (page - 1) * limit;
+        this.modelQuery = this.modelQuery.skip(skip).limit(limit);
         return this;
     }
 }

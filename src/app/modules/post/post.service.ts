@@ -4,6 +4,7 @@ import AppError from "../../errors/AppError";
 import { User } from "../user/user.model";
 import { TPost } from "./post.interface";
 import { Post } from "./post.model";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 // create new post into db
 const createNewPostIntoDb = async (payload: TPost) => {
@@ -19,10 +20,50 @@ const createNewPostIntoDb = async (payload: TPost) => {
 };
 
 // get all posts from db
-const getAllPostsFromDb = async () => {
-  const posts = await Post.find();
-  return posts || [];
+const getAllPostsFromDb = async (query: Record<string, any>) => {
+  const searchableFields = ["title", "description"];
+  const postQuery = new QueryBuilder(Post.find(), query)
+    .search(searchableFields)
+    .filter()
+    .sort();
+
+  // total matching posts
+  const totalPosts = await postQuery.modelQuery.clone().countDocuments();
+
+  // totalPages
+  const limit = Number(query.limit) || 5;
+  const totalPages = Math.ceil(totalPosts / limit);
+  postQuery.paginate();
+  // Execute the query
+  const posts = await postQuery.modelQuery;
+  return { posts, totalPages };
 };
+
+
+
+// get user posts from db
+const getUserPostsFromDb = async (userId: string, query: Record<string, any>) => {
+  const searchableFields = ["title", "description"];
+
+  // Add userId to the initial query to filter by user
+  const postQuery = new QueryBuilder(Post.find({ user: userId }), query)
+    .search(searchableFields)
+    .filter()
+    .sort();
+
+  // total matching posts
+  const totalPosts = await postQuery.modelQuery.clone().countDocuments();
+
+  // totalPages
+  const limit = Number(query.limit) || 5;
+  const totalPages = Math.ceil(totalPosts / limit);
+  postQuery.paginate();
+
+  // Execute the query
+  const posts = await postQuery.modelQuery;
+  return { posts, totalPages };
+};
+
 
 // get single post from db
 const getSinglePostFromDb = async (id: string) => {
@@ -92,10 +133,8 @@ const votePost = async (id: string, voteStatus: boolean) => {
   } else {
     updateData.downvoteCount = postExist.downvoteCount + 1; // Increment downvote count
   }
-
   // Update the post in the database
   const updatedPost = await Post.findByIdAndUpdate(id, updateData, { new: true });
-
   return updatedPost;
 };
 
@@ -103,6 +142,7 @@ const votePost = async (id: string, voteStatus: boolean) => {
 export const PostServices = {
   createNewPostIntoDb,
   getAllPostsFromDb,
+  getUserPostsFromDb,
   updatePostFromDb,
   getSinglePostFromDb,
   deletePostFromDb,

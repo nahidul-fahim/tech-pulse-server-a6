@@ -31,7 +31,7 @@ const userSchema = new Schema<TUser, UserModel>({
         type: String,
         required: true
     },
-    bio : {
+    bio: {
         type: String,
         default: ""
     },
@@ -54,6 +54,10 @@ const userSchema = new Schema<TUser, UserModel>({
     following: {
         type: Number,
         default: 0
+    },
+    isBlocked: {
+        type: Boolean,
+        default: false
     },
     resetPasswordToken: {
         type: String,

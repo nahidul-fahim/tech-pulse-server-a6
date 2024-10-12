@@ -7,13 +7,14 @@ export interface TUser {
     email: string;
     role: "user" | "admin";
     password: string;
-    profileImg: string;
+    profileImg?: string;
     bio?: string;
     isDeleted?: boolean;
     isSubscribed?: boolean;
     posts?: number;
     followers?: number;
     following?: number;
+    isBlocked?: boolean;
     resetPasswordToken?: string;
     resetPasswordTokenExpired?: Date;
 }
