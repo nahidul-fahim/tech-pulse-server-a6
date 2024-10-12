@@ -63,11 +63,7 @@ const createAdminValidationSchema = z.object({
         password: z.string({
             invalid_type_error: "Password must be a string",
             required_error: "Password is required"
-        }).min(6, { message: "Must be 6 or more characters long" }),
-        role: z.enum(['admin'], {
-            invalid_type_error: "Role must be 'admin'",
-            required_error: "Role is required"
-        })
+        }).min(6, { message: "Must be 6 or more characters long" })
     })
 });
 

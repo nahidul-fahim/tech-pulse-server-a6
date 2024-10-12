@@ -29,7 +29,6 @@ const userSchema = new Schema<TUser, UserModel>({
     },
     profileImg: {
         type: String,
-        required: true
     },
     bio: {
         type: String,

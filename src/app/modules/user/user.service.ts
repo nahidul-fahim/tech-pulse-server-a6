@@ -78,9 +78,10 @@ const createAdminIntoDb = async (payload: TUser) => {
     if (isExistingUser) {
         throw new AppError(httpStatus.CONFLICT, "The user already exists!")
     }
+    payload.role = 'admin';
     const result = await User.create(payload);
     return result;
-}
+};
 
 
 export const UserServices = {
