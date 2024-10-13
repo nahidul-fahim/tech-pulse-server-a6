@@ -31,7 +31,7 @@ router.get(
 // update user
 router.put(
     "/user/:id",
-    auth(USER_ROLE.user),
+    auth(USER_ROLE.user, USER_ROLE.admin),
     upload.single('file'),
     sendImageToCloudinary,
     (req: Request, res: Response, next: NextFunction) => {

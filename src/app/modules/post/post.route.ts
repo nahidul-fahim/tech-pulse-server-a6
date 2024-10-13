@@ -64,7 +64,6 @@ router.delete(
 // vote a post
 router.patch(
   "/vote-post/:id",
-  auth(USER_ROLE.user),
   validateRequest(PostValidations.votePostValidationSchema),
   PostControllers.votePost
 );

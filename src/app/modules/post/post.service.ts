@@ -22,7 +22,7 @@ const createNewPostIntoDb = async (payload: TPost) => {
 // get all posts from db
 const getAllPostsFromDb = async (query: Record<string, any>) => {
   const searchableFields = ["title", "description"];
-  const postQuery = new QueryBuilder(Post.find(), query)
+  const postQuery = new QueryBuilder(Post.find().populate('user').populate('comments'), query)
     .search(searchableFields)
     .filter()
     .sort();
@@ -46,7 +46,7 @@ const getUserPostsFromDb = async (userId: string, query: Record<string, any>) =>
   const searchableFields = ["title", "description"];
 
   // Add userId to the initial query to filter by user
-  const postQuery = new QueryBuilder(Post.find({ user: userId }), query)
+  const postQuery = new QueryBuilder(Post.find({ user: userId }).populate('user').populate('comments'), query)
     .search(searchableFields)
     .filter()
     .sort();
@@ -67,7 +67,7 @@ const getUserPostsFromDb = async (userId: string, query: Record<string, any>) =>
 
 // get single post from db
 const getSinglePostFromDb = async (id: string) => {
-  const post = await Post.findById(id);
+  const post = await Post.findById(id).populate('user').populate('comments');
   return post || {};
 };
 
@@ -129,9 +129,9 @@ const votePost = async (id: string, voteStatus: boolean) => {
 
   // Increment the appropriate vote count based on voteStatus
   if (voteStatus) {
-    updateData.upvoteCount = postExist.upvoteCount + 1; // Increment upvote count
+    updateData.upvoteCount = postExist.upvoteCount + 1; 
   } else {
-    updateData.downvoteCount = postExist.downvoteCount + 1; // Increment downvote count
+    updateData.downvoteCount = postExist.downvoteCount + 1;
   }
   // Update the post in the database
   const updatedPost = await Post.findByIdAndUpdate(id, updateData, { new: true });

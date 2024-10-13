@@ -74,6 +74,18 @@ const userSchema = new Schema<TUser, UserModel>({
 );
 
 
+// Query Middleware
+userSchema.pre('find', function (next) {
+    this.find({ isDeleted: { $ne: true } });
+    next();
+});
+
+// Query Middleware
+userSchema.pre('findOne', function (next) {
+    this.find({ isDeleted: { $ne: true } });
+    next();
+});
+
 // hash password before saving to db
 userSchema.pre('save', async function (next) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -85,18 +97,15 @@ userSchema.pre('save', async function (next) {
     next();
 })
 
-
 // set "" after saving password
 userSchema.post('save', async function (doc, next) {
     doc.password = "";
     next();
 })
 
-
 // checking if user exists
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
     return await User.findOne({ email })
 };
-
 
 export const User = model<TUser, UserModel>('User', userSchema)
