@@ -48,12 +48,20 @@ const getAllPayments = async () => {
     const totalPaymentAmount = payments.reduce((total, payment) => {
         return total + payment.paidAmount;
     }, 0);
-    return {payments, totalPaymentAmount};
+    return { payments, totalPaymentAmount };
+};
+
+
+// get user payments
+const getUserPayments = async (userId: string) => {
+    const payments = await Payment.find({ userId }).populate("userId");
+    return payments;
 };
 
 
 export const PaymentServices = {
     makePaymentIntoDb,
     confirmPayment,
-    getAllPayments
+    getAllPayments,
+    getUserPayments
 };

@@ -32,8 +32,20 @@ const getAllPayments = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+// get user payments
+const getUserPayments = catchAsync(async (req: Request, res: Response) => {
+    const result = await PaymentServices.getUserPayments(req.params.id);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User payments",
+        data: result,
+    });
+});
+
 export const PaymentController = {
     makeNewPayment,
     confirmation,
-    getAllPayments
+    getAllPayments,
+    getUserPayments
 };

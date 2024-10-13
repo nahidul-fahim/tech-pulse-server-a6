@@ -27,6 +27,11 @@ router.get(
     PaymentController.getAllPayments
 )
 
+// get user payments
+router.get(
+    "/user-payments/:id",
+    PaymentController.getUserPayments
+)
 
 const PaymentRoutes = router;
 export default PaymentRoutes;
