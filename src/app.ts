@@ -19,7 +19,7 @@ app.use("/api/v1", router)
 
 // testing route
 app.get('/', (req: Request, res: Response) => {
-    res.send('Rental Wheels is up and running!')
+    res.send('Tech Pulse is up and running!')
 })
 
 // global error handler

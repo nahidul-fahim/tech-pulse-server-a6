@@ -59,8 +59,8 @@ Follow these steps to set up the project locally:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/nahidul-fahim/rental-wheels-server.git
-    cd rental-wheels-server
+    git clone https://github.com/nahidul-fahim/tech-pulse-server.git
+    cd tech-pulse-server
     ```
 
 2. Install the dependencies:

@@ -20,7 +20,7 @@ const createNewCommentIntoDb = async (payload: TComment) => {
   return comment;
 };
 
-const editCommentFromDb = async (payload: {id:string, comment:string,user:string}) => {
+const editCommentFromDb = async (payload: { id: string, comment: string, user: string }) => {
   const comment = await Comment.findById(payload.id);
   if (!comment) {
     throw new AppError(httpStatus.NOT_FOUND, "Comment not found");
@@ -39,37 +39,35 @@ const editCommentFromDb = async (payload: {id:string, comment:string,user:string
 };
 
 const deleteCommentFromDb = async (payload: { id: string; user: string }) => {
-    // Find the comment by ID
-    const comment = await Comment.findById(payload.id);
-    if (!comment) {
-      throw new AppError(httpStatus.NOT_FOUND, "Comment not found");
-    }
-  
-    // Check if the user is authorized to delete the comment
-    if (comment.user.toString() !== payload.user) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized to delete this comment");
-    }
-  
-    // Delete the comment
-    const deletedComment = await Comment.findByIdAndDelete(payload.id);
-  
-    // Find the associated post and ensure it exists
-    const post = await Post.findById(comment.post);
-    if (!post) {
-      throw new AppError(httpStatus.NOT_FOUND, "Associated post not found");
-    }
-  
-    // Remove the comment ID from the post's comments array using filter
-    post.comments = post.comments.filter(
-      (commentId) => commentId.toString() !== payload.id
-    );
-  
-    await post.save(); // Save the updated post
-  
-    return deletedComment;
-  };
-  
-  
+  // Find the comment by ID
+  const comment = await Comment.findById(payload.id);
+  if (!comment) {
+    throw new AppError(httpStatus.NOT_FOUND, "Comment not found");
+  }
+
+  // Check if the user is authorized to delete the comment
+  if (comment.user.toString() !== payload.user) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized to delete this comment");
+  }
+
+  // Delete the comment
+  const deletedComment = await Comment.findByIdAndDelete(payload.id);
+
+  // Find the associated post and ensure it exists
+  const post = await Post.findById(comment.post);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Associated post not found");
+  }
+
+  // Remove the comment ID from the post's comments array using filter
+  post.comments = post.comments.filter(
+    (commentId) => commentId.toString() !== payload.id
+  );
+
+  await post.save();
+
+  return deletedComment;
+};
 
 
 const getAllCommentForAPostFromDb = async (id: string) => {
@@ -83,4 +81,4 @@ const getSingleCommentFromDb = async (id: string) => {
 };
 
 
-export const commentServices = { createNewCommentIntoDb, editCommentFromDb,deleteCommentFromDb,getAllCommentForAPostFromDb,getSingleCommentFromDb };
+export const commentServices = { createNewCommentIntoDb, editCommentFromDb, deleteCommentFromDb, getAllCommentForAPostFromDb, getSingleCommentFromDb };
