@@ -58,6 +58,11 @@ const userSchema = new Schema<TUser, UserModel>({
         type: Boolean,
         default: false
     },
+    transactionId: {
+        type: String,
+        default: "",
+        required: false
+    },
     resetPasswordToken: {
         type: String,
         required: false

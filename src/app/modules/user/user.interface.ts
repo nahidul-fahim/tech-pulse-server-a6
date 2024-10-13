@@ -13,6 +13,7 @@ export interface TUser {
     isSubscribed?: boolean;
     posts?: number;
     followers?: number;
+    transactionId?: string;
     following?: number;
     isBlocked?: boolean;
     resetPasswordToken?: string;

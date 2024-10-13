@@ -1,0 +1,39 @@
+import { Request, Response } from "express";
+import httpStatus from "http-status";
+import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
+import { PaymentServices } from "./payment.service";
+
+// make payment
+const makeNewPayment = catchAsync(async (req: Request, res: Response) => {  // Use correct types here
+    const result = await PaymentServices.makePaymentIntoDb(req.body);
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Payment successful",
+        data: result,
+    });
+});
+
+// confirmation
+const confirmation = async (req: Request, res: Response) => {
+    await PaymentServices.confirmPayment(req.query.transactionId as string);
+    res.redirect("http://localhost:3000/payment-success");
+};
+
+// get all payments
+const getAllPayments = catchAsync(async (req: Request, res: Response) => {
+    const result = await PaymentServices.getAllPayments();
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "All payments",
+        data: result,
+    });
+});
+
+export const PaymentController = {
+    makeNewPayment,
+    confirmation,
+    getAllPayments
+};

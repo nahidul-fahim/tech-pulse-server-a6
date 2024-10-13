@@ -36,7 +36,7 @@ const getAllPostsFromDb = async (query: Record<string, any>) => {
   postQuery.paginate();
   // Execute the query
   const posts = await postQuery.modelQuery;
-  return { posts, totalPages };
+  return { posts, totalPages, totalPosts };
 };
 
 
@@ -129,7 +129,7 @@ const votePost = async (id: string, voteStatus: boolean) => {
 
   // Increment the appropriate vote count based on voteStatus
   if (voteStatus) {
-    updateData.upvoteCount = postExist.upvoteCount + 1; 
+    updateData.upvoteCount = postExist.upvoteCount + 1;
   } else {
     updateData.downvoteCount = postExist.downvoteCount + 1;
   }

@@ -19,4 +19,7 @@ export default ({
     smtp_pass: process.env.SMTP_PASS,
     smtp_from_email: process.env.SMTP_FROM_EMAIL,
     client_url: process.env.CLIENT_URL,
+    store_id: process.env.STORE_ID,
+    signature_key: process.env.SIGNATURE_KEY,
+    payment_url: process.env.PAYMENT_URL,
 })
