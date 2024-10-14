@@ -5,6 +5,8 @@ import { TUser } from "./user.interface";
 import { User } from "./user.model";
 import { generateToken } from "../auth/auth.utils";
 import config from "../../config";
+import { Payment } from "../payment/payment.model";
+import { Post } from "../post/post.model";
 
 // create new user into db
 const createUserIntoDb = async (cloudinaryResult: any, payload: TUser) => {
@@ -83,6 +85,94 @@ const createAdminIntoDb = async (payload: TUser) => {
     return result;
 };
 
+// Function to get monthly data for users, posts, and payments
+const adminDashboardDataFromDb = async () => {
+    const currentYear = new Date().getFullYear();
+
+    // Helper function to fill in missing months with zero counts
+    const fillMissingMonths = (data: any, field: any) => {
+        const months = Array.from({ length: 12 }, (_, i) => i + 1);
+        const filledData = months.map(month => {
+            const found = data.find((item: any) => item._id === month);
+            return found ? found : { _id: month, [field]: 0 };
+        });
+        return filledData;
+    };
+
+    // Aggregate user data by month
+    const monthlyUsers = await User.aggregate([
+        {
+            $match: {
+                createdAt: {
+                    $gte: new Date(`${currentYear}-01-01`),
+                    $lte: new Date(`${currentYear}-12-31`)
+                }
+            }
+        },
+        {
+            $group: {
+                _id: { $month: "$createdAt" },
+                userCount: { $sum: 1 }
+            }
+        },
+        {
+            $sort: { _id: 1 }
+        }
+    ]);
+    const filledMonthlyUsers = fillMissingMonths(monthlyUsers, 'userCount');
+
+    // Aggregate post data by month
+    const monthlyPosts = await Post.aggregate([
+        {
+            $match: {
+                createdAt: {
+                    $gte: new Date(`${currentYear}-01-01`),
+                    $lte: new Date(`${currentYear}-12-31`)
+                }
+            }
+        },
+        {
+            $group: {
+                _id: { $month: "$createdAt" }, 
+                postCount: { $sum: 1 } 
+            }
+        },
+        {
+            $sort: { _id: 1 } 
+        }
+    ]);
+    const filledMonthlyPosts = fillMissingMonths(monthlyPosts, 'postCount');
+
+
+    const monthlyPayments = await Payment.aggregate([
+        {
+            $match: {
+                createdAt: {
+                    $gte: new Date(`${currentYear}-01-01`),
+                    $lte: new Date(`${currentYear}-12-31`)
+                }
+            }
+        },
+        {
+            $group: {
+                _id: { $month: "$createdAt" },
+                totalAmount: { $sum: "$paidAmount" }
+            }
+        },
+        {
+            $sort: { _id: 1 } 
+        }
+    ]);
+    const filledMonthlyPayments = fillMissingMonths(monthlyPayments, 'totalAmount');
+
+
+    return {
+        users: filledMonthlyUsers,
+        posts: filledMonthlyPosts,
+        payments: filledMonthlyPayments
+    };
+};
+
 
 export const UserServices = {
     createUserIntoDb,
@@ -90,5 +180,6 @@ export const UserServices = {
     updateUserInDb,
     getAllUsersFromDb,
     manageUserInDb,
-    createAdminIntoDb
+    createAdminIntoDb,
+    adminDashboardDataFromDb
 };

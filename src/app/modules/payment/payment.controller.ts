@@ -18,7 +18,7 @@ const makeNewPayment = catchAsync(async (req: Request, res: Response) => {  // U
 // confirmation
 const confirmation = async (req: Request, res: Response) => {
     await PaymentServices.confirmPayment(req.query.transactionId as string);
-    res.redirect("http://localhost:3000/payment-success");
+    res.redirect("https://tech-pulse-a6.vercel.app/payment-success");
 };
 
 // get all payments

@@ -65,4 +65,11 @@ router.post(
     UserController.createNewAdmin
 );
 
+// admin dashboard data
+router.get(
+    "/admin-dashboard-data",
+    auth("admin"),
+    UserController.adminDashboardData
+)
+
 export const UserRoutes = router;

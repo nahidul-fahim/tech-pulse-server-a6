@@ -82,11 +82,23 @@ const createNewAdmin = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+// admin dashboard data
+const adminDashboardData = catchAsync(async (req: Request, res: Response) => {
+    const result = await UserServices.adminDashboardDataFromDb();
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Admin dashboard data fetched successfully",
+        data: result
+    })
+})
+
 export const UserController = {
     createNewUser,
     getUserById,
     updateUser,
     getAllUsers,
     manageUser,
-    createNewAdmin
+    createNewAdmin,
+    adminDashboardData
 };

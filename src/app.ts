@@ -8,7 +8,7 @@ import router from './app/routes';
 
 // parsers
 app.use(express.json());
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000', 'https://tech-pulse-a6.vercel.app'];
 app.use(cors({
     origin: allowedOrigins,
     credentials: true
