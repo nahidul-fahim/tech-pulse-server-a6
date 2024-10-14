@@ -22,13 +22,13 @@ const createNewPostIntoDb = async (payload: TPost) => {
 // get all posts from db
 const getAllPostsFromDb = async (query: Record<string, any>) => {
   const searchableFields = ["title", "description"];
-  const postQuery = new QueryBuilder(Post.find().populate('user').populate('comments'), query)
+  const postQuery = new QueryBuilder(Post.find(), query)
     .search(searchableFields)
     .filter()
     .sort();
 
   // total matching posts
-  const totalPosts = await postQuery.modelQuery.clone().countDocuments();
+  const totalPosts = await Post.countDocuments();
 
   // totalPages
   const limit = Number(query.limit) || 5;
