@@ -61,7 +61,7 @@ const getUserPostsFromDb = async (userId: string, query: Record<string, any>) =>
 
   // Execute the query
   const posts = await postQuery.modelQuery;
-  return { posts, totalPages };
+  return { posts, totalPages, totalPosts };
 };
 
 
