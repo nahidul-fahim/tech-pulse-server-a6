@@ -12,9 +12,9 @@ export interface TUser {
     isDeleted?: boolean;
     isSubscribed?: boolean;
     posts?: number;
-    followers?: number;
+    followers?: string[];
+    following?: string[];
     transactionId?: string;
-    following?: number;
     isBlocked?: boolean;
     resetPasswordToken?: string;
     resetPasswordTokenExpired?: Date;

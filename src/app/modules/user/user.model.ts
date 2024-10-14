@@ -46,14 +46,16 @@ const userSchema = new Schema<TUser, UserModel>({
         type: Number,
         default: 0
     },
-    followers: {
-        type: Number,
-        default: 0
-    },
-    following: {
-        type: Number,
-        default: 0
-    },
+    followers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
+    following: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
     isBlocked: {
         type: Boolean,
         default: false
